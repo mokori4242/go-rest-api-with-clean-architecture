@@ -3,7 +3,6 @@ package usecase
 import (
 	"app/model"
 	"app/repository"
-	"go-rest-api/validator"
 	"os"
 	"time"
 
@@ -13,7 +12,7 @@ import (
 
 type IUserUsecase interface {
 	SignUp(user model.User) (model.UserResponse, error)
-	SignIn(user model.User) (string, error)
+	Login(user model.User) (string, error)
 }
 
 type userUsecase struct {
@@ -34,18 +33,19 @@ func (uu *userUsecase) SignUp(user model.User) (model.UserResponse, error) {
 		return model.UserResponse{}, err
 	}
 	resUser := model.UserResponse{
-		ID: newUser.ID,
-		Email: newUser.Email
+		ID:    newUser.ID,
+		Email: newUser.Email,
 	}
 	return resUser, nil
 }
 
-func (uu *userUsecase) SignIn(user model.User) (string, error) {
-	stroredUser := model.User{}
-	if err := uu.ur.GetUserByEmail(&stroredUser, user.Email); err != nil {
+func (uu *userUsecase) Login(user model.User) (string, error) {
+	storedUser := model.User{}
+	if err := uu.ur.GetUserByEmail(&storedUser, user.Email); err != nil {
 		return "", err
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(stroredUser.Password), []byte(user.Password)); err != nil {
+	err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(user.Password))
+	if err != nil {
 		return "", err
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
