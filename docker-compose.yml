@@ -3,12 +3,12 @@ version: '3.8'
 services:
   # golang
   app:
-    build:
+    build: # ビルドに使うDockerファイルのパス
       context: .
       dockerfile: ./docker/app/Dockerfile
-    volumes:
-      - ./app:app
-    tty: true
+    volumes: # マウント
+      - ./app:/usr/local/go/src/app
+    tty: true # コンテナの永続化
     depends_on:
       - db
     ports:
