@@ -10,8 +10,8 @@ up: #コンテナを立ち上げる
 	docker compose up --build
 down: #コンテナを終了する
 	docker compose down --remove-orphans
-go:
-	docker compose exec app go run main.go
+go: #goのコンテナにログインして実行
+	docker compose exec app GO_ENV=dev go run main.go
 test:
 	docker compose exec app go test -v app/models
 parallel-test:

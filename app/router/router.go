@@ -3,6 +3,7 @@ package router
 import (
 	"app/controller"
 	"os"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,8 +23,8 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController) *ec
 		CookiePath:     "/",
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
-		// CookieSameSite: http.SameSiteNoneMode,
-		CookieSameSite: http.SameSiteDefaultMode,
+		CookieSameSite: http.SameSiteNoneMode,
+		// CookieSameSite: http.SameSiteDefaultMode,
 		//CookieMaxAge:   60,
 	}))
 	e.POST("/signup", uc.SignUp)
